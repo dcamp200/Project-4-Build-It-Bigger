@@ -1,39 +1,40 @@
 package com.udacity.gradle.builditbigger;
 
-import android.test.ActivityInstrumentationTestCase2;
-import android.test.TouchUtils;
-import android.test.suitebuilder.annotation.MediumTest;
+import android.support.test.filters.SmallTest;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
 import android.util.Log;
-import android.widget.Button;
+
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 /**
  * Project4
  * Created by david on 2016-07-23.
  */
-public class JokeButtonClickTest extends ActivityInstrumentationTestCase2<MainActivity> {
+@RunWith(AndroidJUnit4.class)
+@SmallTest
+public class JokeButtonClickTest  {
 
-    private MainActivity mMainActivity;
-    private Button mJokeButton;
+    private static final String JOKE = "Q: What do you call a fake noodle? A: An Impasta!";
 
-    public JokeButtonClickTest() {
-        super(MainActivity.class);
-    }
+    @Rule
+    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
 
-        setActivityInitialTouchMode(true);
-        mMainActivity = getActivity();
-        mJokeButton = (Button) mMainActivity.findViewById(R.id.jokeButton);
-        //mTextView = (TextView) mClickActvity.findViewById(R.id.click_count_text_view);
-    }
 
-    @MediumTest
+    @Test
     public void testClick() {
         Log.i(JokeButtonClickTest.class.getSimpleName(), "Running click test...");
-        TouchUtils.clickView(this, mJokeButton);
-
-        assertEquals(1, 1);
+        onView(withId(R.id.jokeButton)).perform(click());
+        // This view is in a different Activity, no need to tell Espresso.
+        onView(withId(R.id.jokeView)).check(matches(withText(JOKE)));
     }
 }
